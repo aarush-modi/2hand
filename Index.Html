@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecondHand - Buy? Sell? Free Forever</title>
+    <style>
+        body {
+            font-family: "San Francisco", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff; /* White background */
+            color: #28666e; /* Main text color */
+        }
+        header {
+            background-color: #28666e; /* Dark teal */
+            color: #ffffff; /* White text */
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000; /* Ensure header stays above other content */
+        }
+        header img {
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            height: 50px; /* Adjust as needed */
+            width: auto;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: none;
+            border-radius: 20px; /* Rounded edges */
+            margin-top: 10px;
+            width: 300px; /* Longer width */
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .category-panel {
+            flex: 1;
+            background-color: #7c9885; /* Light green */
+            padding: 10px;
+            color: #ffffff; /* White text */
+            font-weight: bold; /* Bold text */
+            font-size: 18px; /* Larger font size for categories */
+            position: sticky;
+            top: 70px; /* Distance from top */
+            overflow-y: auto; /* Allow scrolling within the panel */
+            max-height: calc(100vh - 100px); /* Adjust panel height based on viewport */
+        }
+        .category-panel h2 {
+            color: #28666e; /* Dark teal */
+            font-weight: bold; /* Bold heading */
+        }
+        .category-panel ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .category-panel li {
+            margin-bottom: 5px;
+        }
+        .category-panel label {
+            margin-left: 5px;
+        }
+        .catalog {
+            flex: 3;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .item {
+            width: 200px;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #28666e; /* Dark teal border */
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            text-align: center;
+            display: block; /* Initially show all items */
+            border-radius: 10px; /* Rounded corners */
+            transition: transform 0.3s ease; /* Smooth transition */
+            cursor: pointer; /* Pointer cursor for clickable items */
+        }
+        .item:hover {
+            transform: translateY(-5px); /* Lift up on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+        }
+        .item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .item h3 {
+            color: #28666e; /* Dark teal */
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: bold; /* Bold item name */
+        }
+        .item p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .item button {
+            background-color: #28666e; /* Dark teal */
+            color: #ffffff; /* White text */
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-weight: bold; /* Bold button text */
+        }
+        .item button:hover {
+            background-color: #7c9885; /* Light green on hover */
+        }
+
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #28666e; /* Dark teal */
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 20px;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        /* Links inside the Dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change Color of Dropdown Links on Hover */
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        /* Show the Dropdown Menu on Hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Show the Dropdown Button when Hovered */
+        .dropdown:hover .dropbtn {
+            background-color: #7c9885; /* Light green on hover */
+        }
+
+        @media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .category-panel {
+        width: 100%;
+        position: relative;
+        max-height: none;
+        top: 0;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+    .category-panel ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .category-panel li {
+        flex: 1 1 45%; /* Adjusts the width of each category item */
+        margin-bottom: 10px;
+    }
+}
+
+/* Adjust the existing category-panel styling to ensure it looks good on larger screens as well */
+.category-panel {
+    flex: 1;
+    background-color: #7c9885; /* Light green */
+    padding: 10px;
+    color: #ffffff; /* White text */
+    font-weight: bold; /* Bold text */
+    font-size: 18px; /* Larger font size for categories */
+    position: sticky;
+    top: 70px; /* Distance from top */
+    overflow-y: auto; /* Allow scrolling within the panel */
+    max-height: calc(100vh - 100px); /* Adjust panel height based on viewport */
+}
+    </style>
+</head>
+<body>
+    <header>
+        <img src="secondhand.jpg" alt="SecondHand Logo">
+        <h1>SecondHand</h1>
+        <p>Buy? Sell? Free Forever</p>
+        <input type="text" placeholder="Search..." id="searchInput" onkeyup="searchItems()">
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content" id="dropdown-content">
+                <a href="#" id="login">Log in</a>
+                <a href="#" id="signup">Sign up</a>
+                <a href="#" id="upload">Upload item</a>
+                <a href="#" id="favourites">Favourites</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="category-panel" id="categoryPanel">
+            <h2>Categories</h2>
+            <ul>
+                <li>
+                    <input type="checkbox" id="clothing" name="category" value="clothing" onchange="filterItems()">
+                    <label for="clothing">Clothing</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="electronics" name="category" value="electronics" onchange="filterItems()">
+                    <label for="electronics">Electronics</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="furniture" name="category" value="furniture" onchange="filterItems()">
+                    <label for="furniture">Furniture</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="accessories" name="category" value="accessories" onchange="filterItems()">
+                    <label for="accessories">Accessories</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="footwear" name="category" value="footwear" onchange="filterItems()">
+                    <label for="footwear">Footwear</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="automotive" name="category" value="automotive" onchange="filterItems()">
+                    <label for="automotive">Automotive</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="household" name="category" value="household" onchange="filterItems()">
+                    <label for="household">Household Items</label>
+                </li>
+                <!-- Add more categories as needed -->
+            </ul>
+        </div>
+        <div class="catalog" id="itemContainer">
+            <!-- Catalog boxes will be dynamically generated based on selected categories -->
+            <div class="item clothing" onclick="location.href='polo.html'">
+                <img src="catalouge/large_black_polo.jpg" alt="Large Black Polo">
+                <h3>Large Black Polo</h3>
+                <p>A classic black polo shirt in large size.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item furniture" onclick="location.href='coffee_table.html'">
+                <img src="catalouge/glass_coffee_table.jpg" alt="Glass Coffee Table">
+                <h3>Glass Coffee Table</h3>
+                <p>A stylish glass coffee table for your living room.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item furniture">
+                <img src="catalouge/queen_size_mattress.jpg" alt="Queen Size Mattress">
+                <h3>Queen Size Mattress</h3>
+                <p>A comfortable queen size mattress in good condition.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item accessories">
+                <img src="catalouge/metal_water_bottle.jpg" alt="Metal Water Bottle">
+                <h3>1L Metal Water Bottle</h3>
+                <p>A durable 1-liter metal water bottle.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item footwear">
+                <img src="catalouge/sneakers.jpg" alt="Sneakers">
+                <h3>Sneakers</h3>
+                <p>Stylish and comfortable sneakers for everyday use.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item furniture">
+                <img src="catalouge/glass_desk.jpg" alt="Glass Desk">
+                <h3>Glass Desk</h3>
+                <p>An elegant glass desk for your home office.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item automotive">
+                <img src="catalouge/car_seat_covers.jpg" alt="Car Seat Covers">
+                <h3>Car Seat Covers</h3>
+                <p>Protective covers for your car seats.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item accessories">
+                <img src="catalouge/wallet.jpg" alt="Leather Wallet">
+                <h3>Leather Wallet</h3>
+                <p>A stylish leather wallet for everyday use.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item household">
+                <img src="catalouge/vaccum.jpg" alt="Vacuum Cleaner">
+                <h3>Vacuum Cleaner</h3>
+                <p>Efficient vacuum cleaner for cleaning your home.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item clothing">
+                <img src="catalouge/jeans.jpg" alt="Jeans">
+                <h3>Jeans</h3>
+                <p>Comfortable denim jeans for casual wear.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item accessories">
+                <img src="catalouge/headphones.jpg" alt="Headphones">
+                <h3>Headphonesphones</h3>
+                <p>High-quality headphones for listening to music.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item household">
+                <img src="catalouge/blender.jpg" alt="Blender">
+                <h3>Blender</h3>
+                <p>Powerful blender for making smoothies and soups.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item automotive">
+                <img src="catalouge/carjack.jpg" alt="Car Jack">
+                <h3>Car Jack</h3>
+                <p>Essential tool for lifting your car for maintenance.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item household">
+                <img src="catalouge/rice_cooker.jpg" alt="Rice Cooker">
+                <h3>Rice Cooker</h3>
+                <p>Automatic rice cooker for convenient cooking.</p>
+                <button>Contact Owner</button>
+            </div>
+            <div class="item electronics">
+                <img src="catalouge/smartphone.jpg" alt="Smartphone">
+                <h3>Smartphone</h3>
+                <p>Latest model smartphone with advanced features.</p>
+                <button>Contact Owner</button>
+            </div>
+            
+            <!-- Add more items as needed -->
+        </div>
+    </div>
+    <script>
+        // Function to filter items based on selected categories
+        function filterItems() {
+            let checkboxes = document.querySelectorAll('input[name="category"]');
+            let selectedCategories = Array.from(checkboxes)
+                .filter((checkbox) => checkbox.checked)
+                .map((checkbox) => checkbox.value);
+
+            // Get all items
+            let items = document.querySelectorAll('.item');
+
+            // Show only items that belong to selected categories or show all if no category selected
+            items.forEach((item) => {
+                let category = item.classList.item(1); // Get category of item (second class)
+                if (selectedCategories.length === 0 || selectedCategories.includes(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Function to search items by name or description
+        function searchItems() {
+            // Declare variables
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toUpperCase();
+            let items = document.querySelectorAll('.item');
+
+            // Loop through all list items, and hide those who don't match the search query
+            items.forEach((item) => {
+                let itemName = item.querySelector('h3').textContent.toUpperCase();
+                let itemDescription = item.querySelector('p').textContent.toUpperCase();
+
+                if (itemName.indexOf(filter) > -1 || itemDescription.indexOf(filter) > -1 || filter === '') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
